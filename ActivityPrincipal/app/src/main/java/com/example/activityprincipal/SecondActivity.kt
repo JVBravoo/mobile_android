@@ -30,16 +30,20 @@ class SecondActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
 
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Adicionar Fruta"
+
         //Surrounded with null-check, Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type Bundle?
 //        if (savedInstanceState != null) {
 //            image = savedInstanceState.getParcelable(ACTIVITY_SECOND_IMAGE)
 //            imagem.setImageResource()
 //        }
 
-        val adiImage = findViewById<Button>(R.id.buttonLoadPicture)
+        val adiImage = findViewById<Button>(R.id.buttonLoadPicture) // botão para adicionar imagem (Load image)
         adiImage.setOnClickListener {
-            val gallery = Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            startActivityForResult(gallery, pickImage)
+            val gallery = Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.INTERNAL_CONTENT_URI) // Abre a galeria
+            startActivityForResult(gallery, pickImage) // permissao para abrir galeria
         }
 
 //        imageView = findViewById(R.id.buttonLoadPicture)
@@ -64,7 +68,7 @@ class SecondActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == RESULT_OK && requestCode == pickImage){
-            image = data?.data // URI
+            image = data?.data // Pega o URI da imagem
 
 //             Para dar permissão para buscar a URI, pois ocorria de crashar a aplicação
             val content = applicationContext.contentResolver

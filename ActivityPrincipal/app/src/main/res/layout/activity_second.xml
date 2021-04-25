@@ -9,6 +9,17 @@
     tools:context=".SecondActivity" >
 
 
+<com.google.android.material.appbar.AppBarLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:ignore="MissingConstraints">
+
+    <include layout="@layout/toolbar"
+        android:id="@+id/toolbar"/>
+
+</com.google.android.material.appbar.AppBarLayout>
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="100dp"

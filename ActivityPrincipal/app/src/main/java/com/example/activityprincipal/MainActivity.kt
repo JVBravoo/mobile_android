@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity(), Adapter_ex.OnItemClickListener {
 
     private var exampleList = generateList(7) // quantidade de itens na lista
 
-    private var adapter = Adapter_ex(exampleList, this) // Gerencia os dados e fornece a view secundária para ele, serve como uma ponte (estrutura de dados e o recyclerView)
+    private var adapter = Adapter_ex(exampleList, this) // Gerencia os dados e fornece a view secundária para ele, serve como uma ponte (recyclerView)
 
     companion object{
         const val MAIN_LIST = "MAIN_LIST"
@@ -26,6 +26,10 @@ class MainActivity : AppCompatActivity(), Adapter_ex.OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.title = "Lista de Frutas"
 
         // Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type Bundle?
         if(savedInstanceState != null) {
@@ -43,7 +47,7 @@ class MainActivity : AppCompatActivity(), Adapter_ex.OnItemClickListener {
         }
     }
 
-    override fun onSaveInstanceState(savedInstanceState: Bundle) { // Função para fazer com que os dados não se percam quando a tela girar
+    override fun onSaveInstanceState(savedInstanceState: Bundle) { // Função para fazer com que os dados não se percam quando a tela girar, na SecondActivity também
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putParcelableArrayList(MAIN_LIST, exampleList) // Faz com que a minha lista e as últimas alterações fiquem mesmo com a tela girando
 
@@ -75,7 +79,7 @@ class MainActivity : AppCompatActivity(), Adapter_ex.OnItemClickListener {
         if(resultCode == Activity.RESULT_OK){
             if(requestCode == MAIN_ACTIVITY_REGISTER_CODE){
                 val Item: ItemEx? = data?.getParcelableExtra(MAIN_LIST)
-                val nome_fruta = Item?.text1 // Faz a relação do EditText com o ItemEx (text1, nesse caso) devolvendo pra o Main.
+                val nome_fruta = Item?.text1
                 val descricao_fruta = Item?.text2
                 val imageuri = Item?.imageuri
                 if (Item != null) {
@@ -83,7 +87,7 @@ class MainActivity : AppCompatActivity(), Adapter_ex.OnItemClickListener {
                 }
             }
             if(requestCode == MAIN_ACTIVITY_NOT_REGISTER_CODE){
-                val index: Int? = data?.getIntExtra("position", 0)
+                val index: Int? = data?.getIntExtra("position", 0) // Recebe a posição da detalhes activity para remover o item
                 // Type mismatch, Surround with null-check (o IF foi obrigatório)
                 if (index != null) {
                     removeItem(null, index) // Remove o item caso seja diferente de null.
