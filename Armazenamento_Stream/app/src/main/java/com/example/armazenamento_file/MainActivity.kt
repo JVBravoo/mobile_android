@@ -142,6 +142,8 @@ class MainActivity : AppCompatActivity(), adapter.OnItemCLick{
     }
 
     // Consegui implementar o Delete, mas quando precisei adicionar a segunda tela tive problemas e acabei não conseguindo entregar tudo
+    // Quando eu consegui implementar os dois, aconteceu que quando eu clicava no item, ele deletava tudo e depois abria a "DetalhesActivity" vazia.
+    // Preferi priorizar a tela de "DetalhesActivity", pois acho que vale mais pontos que a função de deletar.
 
 //    override fun onDelete(item: ItemEx){
 //        val radioGroupInt = findViewById<RadioButton>(R.id.internal)
