@@ -29,10 +29,16 @@ class adapter(private val lista: ArrayList<ItemEx>, private val listener: MainAc
         }
 
         override fun onClick(v: View?) {
-            val index: Int = adapterPosition
+            val index = adapterPosition
+            var deleta = v?.id == R.id.deleta
             if (index != RecyclerView.NO_POSITION){
-                listener.onItemClick(index)
+                if (deleta) {
+                    listener.onDelete(index)
+                }
+                else {
+                    listener.onItemClick(index)
 //                listener.onDelete(index)
+                }
             }
         }
     }

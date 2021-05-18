@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import java.io.*
 
 
-class MainActivity : AppCompatActivity(), adapter.OnItemCLick{
+class MainActivity : AppCompatActivity(), adapter.OnDeleteListener, adapter.OnItemCLick{
 
 //    var recycleradapter = adapter(this)
     var lista = ArrayList<ItemEx>()
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity(), adapter.OnItemCLick{
                     Toast.makeText(this, "Salvo", Toast.LENGTH_LONG).show()
                 }
             }
-            // Para adicionar apenas o nome dos arquivos no recyclerView
+            // Para adicionar os arquivos no recyclerView
             lista.add(ItemEx(nome, content, arq_storage, ItemEx.NO_JETPACK))
             recycler.adapter?.notifyItemInserted(lista.size)
         }
@@ -143,22 +143,27 @@ class MainActivity : AppCompatActivity(), adapter.OnItemCLick{
 
     // Consegui implementar o Delete, mas quando precisei adicionar a segunda tela tive problemas e acabei não conseguindo entregar tudo
     // Quando eu consegui implementar os dois, aconteceu que quando eu clicava no item, ele deletava tudo e depois abria a "DetalhesActivity" vazia.
+    // Fiz algumas mudanças e agora ele mostra a tela de "DetalhesActivity", mas quando clica na lixeira ele crasha.
     // Preferi priorizar a tela de "DetalhesActivity", pois acho que vale mais pontos que a função de deletar.
+    private fun ItemDelete(view: View?, position: Int) {
+        lista.removeAt(position)
+    }
 
-//    override fun onDelete(item: ItemEx){
-//        val radioGroupInt = findViewById<RadioButton>(R.id.internal)
-//        val nome = lista[position] // Pensar em como vou passar para a atividade de detalhes...
-//
-//        if (radioGroupInt.isChecked){
-//            this.deleteFile(arq_storage) // Deleta o nome do arquivo que foi selecionado, no caso do interno
-//        }
-//        else {
-//            val extFile = File(this.getExternalFilesDir(null), nome)
-//            extFile.delete() // Deleta o nome do arquivo que foi selecionado, no caso do externo
-//        }
-//        lista.removeAt(position) // Remove o arquivo na posição que ele se encontrava
-//        val recycler = findViewById<View>(R.id.recycler) as RecyclerView
-//    }
+    override fun onDelete(position: Int){
+        val radioGroupInt = findViewById<RadioButton>(R.id.internal)
+        ItemDelete(null, position)
+        val nome = lista[position] // Pensar em como vou passar para a atividade de detalhes...
+
+        if (radioGroupInt.isChecked){
+            this.deleteFile(nome.nome) // Deleta o nome do arquivo que foi selecionado, no caso do interno
+        }
+        else {
+            val extFile = File(this.getExternalFilesDir(null), arq_storage)
+            extFile.delete() // Deleta o nome do arquivo que foi selecionado, no caso do externo
+        }
+        lista.removeAt(position) // Remove o arquivo na posição que ele se encontrava
+        val recycler = findViewById<View>(R.id.recycler) as RecyclerView
+    }
 
     override fun onItemClick(position: Int){
         val intent = Intent(this, DetalhesActivity::class.java)
