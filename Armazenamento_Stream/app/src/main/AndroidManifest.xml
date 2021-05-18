@@ -10,6 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Armazenamento_File">
         <activity
+            android:name=".DetalhesActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".MainActivity">
 
             <intent-filter>
