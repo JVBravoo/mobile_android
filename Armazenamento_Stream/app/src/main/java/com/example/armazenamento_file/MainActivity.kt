@@ -1,29 +1,37 @@
 package com.example.armazenamento_file
 
-import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
-import java.io.BufferedReader
-import java.io.FileNotFoundException
-import java.io.IOException
-import java.io.InputStreamReader
+import android.widget.*
+import android.widget.RadioButton
+import androidx.security.crypto.EncryptedFile
+import androidx.security.crypto.MasterKey
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.recyclerview.widget.RecyclerView
+import java.io.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), adapter.OnItemCLick{
+
+//    var recycleradapter = adapter(this)
+    var lista = ArrayList<ItemEx>()
     var textView: EditText? = null
-    var button: Button? = null
-    var read_button: Button? = null
-    var textView2: TextView? = null
-    var textView3: TextView? = null
+//    var button: Button? = null
+//    var read_button: Button? = null
+    var textView2: EditText? = null
+    var arq_storage = ItemEx.ARMAZENAMENTO_INTERNO
+    var jetpack = ItemEx.NO_JETPACK
+//    var textView3: TextView? = null
 //    lateinit var recyclerView: RecyclerView
 
+    companion object {
+        const val MAIN_ACTIVITY_ID = "MAIN_ACTIVITY_ID"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,51 +39,130 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.title = "Exercício Arm. Interno e Externo"
+        val recycler = findViewById<View>(R.id.recycler) as RecyclerView
 
-        textView = findViewById(R.id.textView)
-        textView2 = findViewById(R.id.textView2)
-        textView3 = findViewById(R.id.textView3)
-        button = findViewById(R.id.button)
-        read_button = findViewById(R.id.read_button)
-        textView3 = findViewById(R.id.textView3)
+//        val first: Array<String> = this.fileList()
+//        lista.addAll(first)
 
-        button?.setOnClickListener(View.OnClickListener { writeFile() })
-        read_button?.setOnClickListener(View.OnClickListener { readFile() })
-    }
+        // Caso o checkBox do armazenamento interno seja selecionado...
+//        val radioGroupInt = findViewById<RadioButton>(R.id.internal)
+//        radioGroupInt.setOnClickListener {
+////            lista.clear()
+//
+////            val arquivosinternos: Array<String> = this.fileList()
+////            lista.addAll(arquivosinternos)
+//            recycler.adapter?.notifyDataSetChanged()
+//        }
+//
+//        val radioGroupExt = findViewById<RadioButton>(R.id.external) // CheckBox do armazenamento externo
+//
+//        // Caso o checkBox do armazenamento externo seja selecionado...
+//        radioGroupExt.setOnClickListener {
+//
+//            val arquivosexternos: Array<out File>? = this.getExternalFilesDirs(null)?.clone() // Segui os slides
+//            val listaexterna: List<String>? = arquivosexternos?.map { it.name }
+//
+//            if(listaexterna != null){
+//                lista.addAll(listaexterna.toTypedArray())
+//            }
+//            lista.clear()
+//            recycler.adapter?.notifyDataSetChanged()
+//        }
 
-    fun writeFile() {
-        val textToSave = textView!!.text.toString()
-        try {
-            val fileOutputStream = openFileOutput("Armazenamento.txt", MODE_PRIVATE)
-            fileOutputStream.write(textToSave.toByteArray())
-            fileOutputStream.close()
-            Toast.makeText(applicationContext, "Arquivo salvo", Toast.LENGTH_SHORT).show()
 
-            textView!!.setText("") // Para que depois de escrever e apertar no botão, ele apagar o que tinha antes.
-            textView2!!.setText("")
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
+        val buttonCreate = findViewById<Button>(R.id.button)
+        buttonCreate.setOnClickListener {
+            textView = findViewById<TextView>(R.id.textView) as EditText? // Talvez precise mudar isso
+            textView2 = findViewById<TextView>(R.id.textView2) as EditText?
 
-    fun readFile() {
-        try {
-            val fileInputStream = openFileInput("Armazenamento.txt")
-            val inputStreamReader = InputStreamReader(fileInputStream)
-            val bufferedReader = BufferedReader(inputStreamReader)
-            val stringBuffer = StringBuffer()
+            val nome = textView?.text.toString() // Isso também
+            val content = textView2?.text.toString()
 
-            var lines: String? = null
-            while (bufferedReader.readLine().also { lines = it } != null) {
-                stringBuffer.append("""$lines""".trimIndent())
+            val memoryint = internal.isChecked // método que checa a CheckBox, para saber se foi selecionado ou não
+
+            val jetpack = findViewById<CheckBox>(R.id.jetpack) // Pega o ID do XML checkbox
+
+            // Seguindo os slides 35
+            if (jetpack.isChecked){
+                if (memoryint) this.filesDir
+                else this.getExternalFilesDir(null)
+
+                val masterKeyAlias = MasterKey.Builder(this, MasterKey.DEFAULT_MASTER_KEY_ALIAS).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+
+                val file = File(filesDir, nome)
+                if(file.exists()){
+                    file.delete()
+                }
+
+                // Salvar o arquivo utilizando JetPack, por isso o Encrypted...
+                val encryptedFile = EncryptedFile.Builder(this, file, masterKeyAlias, EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB).build()
+                encryptedFile.openFileOutput().use { writer -> writer.write(content.toByteArray()) }
+                Toast.makeText(this, "Salvo", Toast.LENGTH_LONG).show()
             }
-            textView3!!.text = stringBuffer.toString() // Mostrar no TextView abaixo.
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
+            else {
+                // Para salvar na memória interna
+                if (memoryint){
+                    this.openFileOutput(nome, Context.MODE_PRIVATE).use{
+                        it.write(content.toByteArray())
+                    }
+                    Toast.makeText(this, "Salvo", Toast.LENGTH_LONG).show()
+                }
+                else {
+                    // retirado do slide 26
+                    // Para salvar os arquivos na memória externa
+                    val extFile = File(this.getExternalFilesDir(null), nome)
+                    val outputStream = FileOutputStream(extFile)
+                    outputStream.use { stream -> stream.write(content.toByteArray()) }
+                    Toast.makeText(this, "Salvo", Toast.LENGTH_LONG).show()
+                }
+            }
+            // Para adicionar apenas o nome dos arquivos no recyclerView
+            lista.add(ItemEx(nome, content, arq_storage, ItemEx.NO_JETPACK))
+            recycler.adapter?.notifyItemInserted(lista.size)
         }
+        recycler.adapter = adapter(lista, this)
+        recycler.layoutManager = LinearLayoutManager(this)
+    }
+
+
+    fun onRadioButtonClicked(view: View) {
+        if (view is RadioButton) {
+            val checked = view.isChecked
+            when (view.id) {
+                R.id.internal ->
+                    if (checked) {
+                        arq_storage = ItemEx.ARMAZENAMENTO_INTERNO
+                    }
+                R.id.external ->
+                    if (checked) {
+                        arq_storage = ItemEx.ARMAZENAMENTO_EXTERNO
+                    }
+            }
+        }
+    }
+
+    // Consegui implementar o Delete, mas quando precisei adicionar a segunda tela tive problemas e acabei não conseguindo entregar tudo
+
+//    override fun onDelete(item: ItemEx){
+//        val radioGroupInt = findViewById<RadioButton>(R.id.internal)
+//        val nome = lista[position] // Pensar em como vou passar para a atividade de detalhes...
+//
+//        if (radioGroupInt.isChecked){
+//            this.deleteFile(arq_storage) // Deleta o nome do arquivo que foi selecionado, no caso do interno
+//        }
+//        else {
+//            val extFile = File(this.getExternalFilesDir(null), nome)
+//            extFile.delete() // Deleta o nome do arquivo que foi selecionado, no caso do externo
+//        }
+//        lista.removeAt(position) // Remove o arquivo na posição que ele se encontrava
+//        val recycler = findViewById<View>(R.id.recycler) as RecyclerView
+//    }
+
+    override fun onItemClick(position: Int){
+        val intent = Intent(this, DetalhesActivity::class.java)
+        val itemClick = lista[position]
+        intent.putExtra(MAIN_ACTIVITY_ID, itemClick)
+
+        startActivity(intent)
     }
 }
