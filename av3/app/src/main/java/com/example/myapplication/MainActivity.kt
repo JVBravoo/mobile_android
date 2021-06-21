@@ -9,11 +9,14 @@ import com.example.myapplication.Fragments.SettingsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    // lateinit var main:
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        // Slide 100
 
+        // Slide 100
         val searchFragment = SearchFragment()
         val favoriteFragment = FavoriteFragment()
         val settingsFragment = SettingsFragment()

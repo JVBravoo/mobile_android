@@ -5,8 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.myapplication.R
+import android.widget.RadioButton
+import android.widget.RadioGroup
 
 class SettingsFragment : Fragment() {
+
+    lateinit var SettingsModel: SettingsModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
