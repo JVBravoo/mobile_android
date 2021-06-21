@@ -90,6 +90,7 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    // Parte 2 de criar o arquivo e persistir os dados em SharedPreferences
     fun getList(context: Context): SharedPreferences?{
         return context.getSharedPreferences("settings", Context.MODE_PRIVATE)
     }

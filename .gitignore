@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/linux,macos,visualstudiocode,kotlin,android,androidstudio,vim,java,gradle,windows,emacs
-# Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,visualstudiocode,kotlin,android,androidstudio,vim,java,gradle,windows,emacs
+# Created by https://www.toptal.com/developers/gitignore/api/macos,kotlin,java,android,androidstudio,linux,windows
+# Edit at https://www.toptal.com/developers/gitignore?templates=macos,kotlin,java,android,androidstudio,linux,windows
 
 ### Android ###
 # Built application files
@@ -49,6 +49,7 @@ captures/
 .idea/assetWizardSettings.xml
 .idea/dictionaries
 .idea/libraries
+.idea/jarRepositories.xml
 # Android Studio 3 in .gitignore file.
 .idea/caches
 .idea/modules.xml
@@ -89,64 +90,15 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
+# Android Profiling
+*.hprof
+
 ### Android Patch ###
 gen-external-apklibs
 output.json
 
 # Replacement of .externalNativeBuild directories introduced
 # with Android Studio 3.5.
-
-### Emacs ###
-# -*- mode: gitignore; -*-
-*~
-\#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
-*.elc
-auto-save-list
-tramp
-.\#*
-
-# Org-mode
-.org-id-locations
-*_archive
-ltximg/**
-
-# flymake-mode
-*_flymake.*
-
-# eshell files
-/eshell/history
-/eshell/lastdir
-
-# elpa packages
-/elpa/
-
-# reftex files
-*.rel
-
-# AUCTeX auto folder
-/auto/
-
-# cask packages
-.cask/
-dist/
-
-# Flycheck
-flycheck_*.el
-
-# server auth directory
-/server/
-
-# projectiles files
-.projectile
-
-# directory configuration
-.dir-locals.el
-
-# network security
-/network-security.data
-
 
 ### Java ###
 # Compiled class file
@@ -185,6 +137,7 @@ hs_err_pid*
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 
 ### Linux ###
+*~
 
 # temporary files which can be created if a process still has a handle open of a deleted file
 .fuse_hidden*
@@ -227,37 +180,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-### Vim ###
-# Swap
-[._]*.s[a-v][a-z]
-!*.svg  # comment out if you don't need vector files
-[._]*.sw[a-p]
-[._]s[a-rt-v][a-z]
-[._]ss[a-gi-z]
-[._]sw[a-p]
-
-# Session
-Session.vim
-Sessionx.vim
-
-# Temporary
-.netrwhist
-# Auto-generated tag files
-tags
-# Persistent undo
-[._]*.un~
-
-### VisualStudioCode ###
-.vscode/*
-!.vscode/tasks.json
-!.vscode/launch.json
-*.code-workspace
-
-### VisualStudioCode Patch ###
-# Ignore all local history of files
-.history
-.ionide
-
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -284,24 +206,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-### Gradle ###
-.gradle
-
-# Ignore Gradle GUI config
-gradle-app.setting
-
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
-
-# Cache of project
-.gradletasknamecache
-
-# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-# gradle/wrapper/gradle-wrapper.properties
-
-### Gradle Patch ###
-**/build/
-
 ### AndroidStudio ###
 # Covers files to be ignored for android development using Android Studio.
 
@@ -314,6 +218,7 @@ gradle-app.setting
 # Generated files
 
 # Gradle files
+.gradle
 
 # Signing files
 .signing/
@@ -368,7 +273,6 @@ obj/
 .idea/sqlDataSources.xml
 .idea/dynamic.xml
 .idea/uiDesigner.xml
-.idea/jarRepositories.xml
 
 # OS-specific files
 .DS_Store?
@@ -406,4 +310,4 @@ fabric.properties
 
 !/gradle/wrapper/gradle-wrapper.jar
 
-# End of https://www.toptal.com/developers/gitignore/api/linux,macos,visualstudiocode,kotlin,android,androidstudio,vim,java,gradle,windows,emacs
+# End of https://www.toptal.com/developers/gitignore/api/macos,kotlin,java,android,androidstudio,linux,windows
