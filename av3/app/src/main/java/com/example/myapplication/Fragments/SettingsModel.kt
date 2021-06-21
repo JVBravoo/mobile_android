@@ -32,7 +32,7 @@ class SettingsModel : ViewModel(){
         linguagem.value = _linguagem
     }
 
-    fun setSettings(unidade_tempo: Int, ling: Int){
+    fun setList(unidade_tempo: Int, ling: Int){
         if (unidade_tempo == 0){
             temperatura = MutableLiveData<Int>().apply {
                 value = R.id.radio_group_C
