@@ -9,6 +9,7 @@
         android:id="@+id/searchTxt"
         android:layout_width="300dp"
         android:layout_height="50dp"
+        android:layout_marginTop="16dp"
         android:hint="Type a city"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,10 +19,23 @@
         android:id="@+id/searchBtn"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp"
         android:text="Search"
         app:layout_constraintEnd_toEndOf="@+id/searchTxt"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:max="100"
+        android:backgroundTint="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/searchBtn"
+        android:indeterminateTint="#1a09d6"
+        android:layout_marginTop="-7dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
