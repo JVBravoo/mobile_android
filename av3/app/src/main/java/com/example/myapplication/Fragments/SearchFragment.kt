@@ -42,19 +42,20 @@ class SearchFragment : Fragment() {
 
         val view: View = inflater.inflate(R.layout.fragment_search, container, false)
         val searchBtn = view.findViewById<Button>(R.id.searchBtn)
-//        val progressBar = root.findViewById<ProgressBar>(R.id.progressbar)
+
 
         searchBtn.setOnClickListener {
             val temperatura = prefs.getString("temperatura", "metric").toString()
             val linguagem = prefs.getString("linguagem", "en").toString()
-            Log.e("fon", temperatura.toString())
-            Log.e("fon", linguagem.toString())
+//            Log.e("fon", temperatura.toString())
+//            Log.e("fon", linguagem.toString())
             val city = searchTxt?.text.toString()
             progressbar.setVisibility(View.VISIBLE) // To show the ProgressBar
             getfindResponse(city, temperatura, linguagem)
         }
 
         return view
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){

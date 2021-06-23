@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#3F70EE"
         android:padding="8dp">
 
@@ -25,7 +25,8 @@
             android:layout_height="wrap_content"
             android:text="City Name"
             android:textColor="@color/white"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:textSize="30sp"/>
 
         <TextView
             android:id="@+id/text_temp"

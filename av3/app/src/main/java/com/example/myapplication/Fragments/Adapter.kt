@@ -49,11 +49,11 @@ class Adapter(): ListAdapter<City, Adapter.Holder>(callBack()){
         fun linkTo(city: City){
             cityName.text = city.name
             tempText.text = city.main.temp.toString()
-            val url = "http://openweathermap.org/img/wn/${city.weather[0].icon}@4x.png\""
+            val url = "https://openweathermap.org/img/wn/${city.weather[0].icon}@4x.png"
 
             // Tentei aplicar o item no primeiro appIcon, mas tava dando algum problema, apliquei o icone e pegou. Vai saber...
             // O glide tive que colocar a versão, pq tava com um problema de run_closure_doCall
-            Glide.with(appIcon.context).load(url).into(appIcon)
+            Glide.with(itemView.context).load(url).into(appIcon)
         }
     }
 
