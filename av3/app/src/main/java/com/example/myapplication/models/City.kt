@@ -9,5 +9,12 @@ data class City(
 
     @SerializedName("name")
     var name: String,
+
+    @SerializedName("main")
+    var main: Main,
+
+    @SerializedName("weather")
+    var weather: List<Weather>,
 )
+
 
