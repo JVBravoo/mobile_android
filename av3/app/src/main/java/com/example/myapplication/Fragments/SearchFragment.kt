@@ -13,6 +13,9 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.Api.RetrofitManager
 import com.example.myapplication.R
 import com.example.myapplication.models.Lista
@@ -26,38 +29,43 @@ class SearchFragment : Fragment() {
     lateinit var prefs: SharedPreferences
     lateinit var searchModel: SearchModel
     private val apiKey = "732d823624e403a30804eab140f918f6"
+    private var adapter = Adapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        searchModel = ViewModelProvider(this).get(SearchModel::class.java)
+        searchModel = ViewModelProvider(this).get(SearchModel::class.java)
 
         prefs = requireActivity().getSharedPreferences("settings", Context.MODE_PRIVATE)!!
 
-        val root = inflater.inflate(R.layout.fragment_search, container, false)
-        val searchBtn = root.findViewById<Button>(R.id.searchBtn)
+        val view: View = inflater.inflate(R.layout.fragment_search, container, false)
+        val searchBtn = view.findViewById<Button>(R.id.searchBtn)
 //        val progressBar = root.findViewById<ProgressBar>(R.id.progressbar)
 
         searchBtn.setOnClickListener {
-            val temperatura = prefs.getString("temperatura", "celsius").toString()
-            val linguagem = prefs.getString("linguagem", "english").toString()
+            val temperatura = prefs.getString("temperatura", "metric").toString()
+            val linguagem = prefs.getString("linguagem", "en").toString()
+            Log.e("fon", temperatura.toString())
+            Log.e("fon", linguagem.toString())
             val city = searchTxt?.text.toString()
+            progressbar.setVisibility(View.VISIBLE) // To show the ProgressBar
             getfindResponse(city, temperatura, linguagem)
         }
 
-        return root
+        return view
     }
 
-    // ProgressDialog' is deprecated. Deprecated in Java
-//    private fun getProgress(): ProgressDialog{
-//
-//    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?){
+        super.onViewCreated(view, savedInstanceState)
+
+        recyclerview.adapter = adapter
+        recyclerview.layoutManager = LinearLayoutManager(activity)
+        searchModel.searchLista.observe(requireActivity(), Observer { adapter.submitList(it) })
+    }
 
     private fun getfindResponse(city: String, temperatura: String, linguagem: String) {
-        // Ver se isso funciona, fiz o progressBar no XML
-        progressbar.setVisibility(View.VISIBLE) // To show the ProgressBar
 //        progressbar.setVisibility(View.INVISIBLE) // To hide the ProgressBar
 
         val servico = RetrofitManager().getService()
@@ -74,17 +82,19 @@ class SearchFragment : Fragment() {
                     call: Call<Lista>,
                     response: Response<Lista>
                 ) {
-    //                progressDialog.dismiss()
+                    progressbar.setVisibility(View.INVISIBLE) // To hide the ProgressBar
                     val city: Lista? = response.body()
                     Toast.makeText(activity, city.toString(), Toast.LENGTH_SHORT).show()
+
                     // adapter
-    //                if (city != null) {
-    //                    weatherViewModel.updateCities(city.list)
-    //                    adapter.notifyDataSetChanged()
-    //                }
+                    if (city != null) {
+                        searchModel.updateCity(city.list)
+                        adapter.notifyDataSetChanged()
+                    }
                 }
+
                 override fun onFailure(call: Call<Lista>, t: Throwable) {
-    //                progressDialog.dismiss()
+                    progressbar.setVisibility(View.INVISIBLE) // To hide the ProgressBar
                     Toast.makeText(activity, t.toString(), Toast.LENGTH_SHORT).show()
                     // Se caso não funcionar
                     // Tivemos que usar o CLEARTEXT opção 1 pra resolver
@@ -95,13 +105,10 @@ class SearchFragment : Fragment() {
     }
 
 
-    // Tenho minhas dúvidas
+
     // referencia: https://stackoverflow.com/questions/51141970/check-internet-connectivity-android-in-kotlin
+    // Etapa 3 - caso o device nao esteja conectado
     fun isOnline(context: Context): Boolean {
-
-        // diz respeito ao resultado final
-        // var final = false
-
         // Diz respeito ao Connectivity Manager
         // Referencia: https://developer.android.com/reference/kotlin/android/net/ConnectivityManager
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

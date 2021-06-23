@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,18 +37,17 @@ class SettingsFragment : Fragment() {
         // Type mismatch. adicionei non-null asserted call
         prefs = requireActivity().getSharedPreferences("settings", Context.MODE_PRIVATE)!!
         editor = prefs.edit()
-        // Fiquei em dúvida se essa linha ficava aqui ou dentro da funcao setList()
 
 
         val saveBtn = root.findViewById<Button>(R.id.save_btn)
-        val temperatura = prefs.getString("temperatura", "celsius").toString()
-        val linguagem = prefs.getString("linguagem", "english").toString()
-        setList()
+        val temperatura = prefs.getString("temperatura", "imperial").toString()
+        val linguagem = prefs.getString("linguagem", "en").toString()
+        setList(root)
 
 
         // Check temperature unit from shared preferences
         val unit_tempo = root.findViewById<RadioGroup>(R.id.radio_group_unidade_temp)
-        if (temperatura == "F") {
+        if (temperatura == "imperial") {
             unit_tempo.check(R.id.radio_group_F)
         }
         else {
@@ -55,7 +55,7 @@ class SettingsFragment : Fragment() {
         }
         // Check language from shared preferences
         val lingua = root.findViewById<RadioGroup>(R.id.radio_group_linguagem)
-        if (linguagem == "English"){
+        if (linguagem == "en"){
             lingua.check(R.id.radio_group_ingles)
         }
         else{
@@ -67,9 +67,17 @@ class SettingsFragment : Fragment() {
 
 
         saveBtn.setOnClickListener {
-            // Colocar funcao de escolha de temperatura e linguagem abaixo
-//            it is an implicit name of a single parameter in lambda function
-            salvarPref(it)
+
+            editor.apply {
+                putString("temperatura", "imperial")
+                apply()
+            }
+
+            editor.apply {
+                putString("linguagem", "en")
+                apply()
+            }
+
         }
 //        prefs = storeActivity().getSharedPreferences("sharedPreferences", Context.MODE_PRIVATE)
 //        return super.onCreateView(inflater, container, savedInstanceState)
@@ -77,69 +85,71 @@ class SettingsFragment : Fragment() {
     }
 
     // Salva a preferencia de linguagem escolhida e de métrica da temperatura
-    fun salvarPref(view: View){
-        val temperatura = radio_group_unidade_temp
-        val linguagem = radio_group_linguagem
+//    fun salvarPref(view: View){
 
         // Se clicada no RadioButton
-        if(view is RadioButton) {
-            when (temperatura.checkedRadioButtonId) {
-                R.id.radio_group_C -> {
-                    settingsModel.Temp(R.id.radio_group_C)
-                    // Referencia para metric vs imperial: https://www.youtube.com/watch?v=B9EWaL0ZuqE
-                    editor.apply {
-                        putString("temperature unit", "metric")
-                        apply()
-                    }
-                }
-                R.id.radio_group_F -> {
-                    settingsModel.Temp(R.id.radio_group_F)
-                    editor.apply {
-                        putString("temperature unit", "imperial")
-                        apply()
-                    }
-                }
-            }
-        }
-        // Se clicada no RadioButton
-        if (view is RadioButton) {
-            when (linguagem.checkedRadioButtonId) {
-                R.id.radio_group_ingles -> {
-                    settingsModel.Ling(R.id.radio_group_ingles)
-                    editor.apply {
-                        putString("description language", "english")
-                        apply()
-                    }
-                }
-                R.id.radio_group_portugues -> {
-                    settingsModel.Ling(R.id.radio_group_portugues)
-                    editor.apply {
-                        putString("description language", "portuguese")
-                        apply()
-                    }
-                }
-            }
-        }
-    }
-
-
-//    fun getList(context: Context): SharedPreferences?{
-//        return context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+//        if(view is RadioButton) {
+//            when (temperatura.checkedRadioButtonId) {
+//                R.id.radio_group_C -> {
+//                    settingsModel.Temp(R.id.radio_group_C)
+//                    // Referencia para metric vs imperial: https://www.youtube.com/watch?v=B9EWaL0ZuqE
+//                    Log.e("settings", "antes do apply: metric")
+//                    editor.apply {
+//                        putString("temperatura", "metric")
+//                        apply()
+//                    }
+//                }
+//                R.id.radio_group_F -> {
+//                    settingsModel.Temp(R.id.radio_group_F)
+//                    Log.e("settings", "antes do apply: imperial")
+//                    editor.apply {
+//                        putString("temperatura", "imperial")
+//                        apply()
+//                    }
+//                }
+//            }
+//        }
+//        // Se clicada no RadioButton
+//        if (view is RadioButton) {
+//            when (linguagem.checkedRadioButtonId) {
+//                R.id.radio_group_ingles -> {
+//                    settingsModel.Ling(R.id.radio_group_ingles)
+//                    editor.apply {
+//                        putString("linguagem", "en")
+//                        apply()
+//                    }
+//                }
+//                R.id.radio_group_portugues -> {
+//                    settingsModel.Ling(R.id.radio_group_portugues)
+//                    editor.apply {
+//                        putString("linguagem", "pt")
+//                        apply()
+//                    }
+//                }
+//            }
+//        }
 //    }
+
+
+    fun getList(): SharedPreferences?{
+        return this.requireActivity().getSharedPreferences("settings", Context.MODE_PRIVATE)
+    }
 
     // Parte 2 de criar o arquivo e persistir os dados em SharedPreferences
     // referência: https://www.youtube.com/watch?v=B9EWaL0ZuqE
     @SuppressLint("CommitPrefEdits")
-    fun setList(){
-        // Tive um problema com o context abaixo, e tive que colocar a "?"... Não entendi mto bem pq
-        val prefs: SharedPreferences? =
-            requireActivity().getSharedPreferences("settings", 0)
-        val linguagem = prefs?.getString("Temperature Unit", null)
-        val temperatura = prefs?.getString("Description Language", null)
+    fun setList(view: View){
+
+        val prefs: SharedPreferences? = getList()
+
+        val linguagem = view.findViewById<RadioGroup>(R.id.radio_group_linguagem)
+        val temperatura = view.findViewById<RadioGroup>(R.id.radio_group_unidade_temp)
+//        val linguagem = prefs?.getString("Temperature Unit", null)
+//        val temperatura = prefs?.getString("Description Language", null)
         var linguagem_id = 0
         var temperatura_id = 0
 
-        // Métrica de temperatura
+        // Faz a checagem da métrica de temperatura do SharedPreferences
         if (temperatura.toString() == "metric"){
             temperatura_id = radio_group_C.id
         }
@@ -147,11 +157,11 @@ class SettingsFragment : Fragment() {
             temperatura_id = radio_group_F.id
         }
 
-        // Língua
-        if (linguagem.toString() == "english"){
+        // Faz a checagem da linguagem do SharedPreferences
+        if (linguagem.toString() == "en"){
             linguagem_id = radio_group_ingles.id
         }
-        else if (linguagem.toString() == "portuguese"){
+        else if (linguagem.toString() == "pt"){
             linguagem_id = radio_group_portugues.id
         }
 
