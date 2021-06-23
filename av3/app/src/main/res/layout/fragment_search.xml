@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:indeterminate="true"
         android:max="100"
+        android:visibility="gone"
         android:backgroundTint="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/searchBtn"
