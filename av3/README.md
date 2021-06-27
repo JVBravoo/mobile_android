@@ -1,0 +1,22 @@
+### Activity 05 - Navigation View
+
+- Create the Bottom Navigation View:
+    - Create Bottom Navigation Items
+    - Add BottomNavigationView to layout
+    - Listen for item clicks
+    - add 3 fragments
+- Create Settings Fragment:
+    - Persist data in SharedPreferences
+- Create Search Fragment:
+    - Add an EditText and a Button
+    - Implement the button click event
+    - If the device is not connected, display a Toast informing the user that the device i “Offline” (No internet connection).
+- Create classes for JSON mapping
+- Create service interface
+- Create class to get the Retrofit instance (RetrofitManager)
+- Make asynchronous request and display: ProgressBar when necessary City Id and Name
+- Add RecyclerView to layout;
+- Create item layout;
+- Create Adapter
+- Create RecyclerView.ItemDecoration (add margin to RecyclerView);
+- Download temperature icons with the Glide library.
